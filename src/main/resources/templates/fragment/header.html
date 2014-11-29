@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+        >
+<head>
+    <title>header</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div th:fragment="header">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="#">Lead generator</a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li th:class="${page eq 'index'}? 'active' : ''"><a th:href="@{/}">Главная</a></li>
+                        <li sec:authorize="hasAnyAuthority('ADMIN','CLIENT','MANAGER')" th:class="${page eq 'orders'}? 'active' : ''">
+                            <a th:href="@{/orders}">Заказы</a>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('ADMIN')" th:class="${page eq 'clients'}? 'active' : ''">
+                            <a th:href="@{/clients}">Клиенты</a>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('ADMIN')" th:class="${page eq 'order_sources'}? 'active' : ''">
+                            <a th:href="@{/order_src}">Источники заказов</a>
+                        </li>
+
+                        <li sec:authorize="hasAnyAuthority('ADMIN')" th:class="${page eq 'sources_utm'}? 'active' : ''">
+                            <a th:href="@{/utm}">UTM метки</a>
+                        </li>
+
+                        <li sec:authorize="hasAnyAuthority('CLIENT')" th:class="${page eq 'managers'}? 'active' : ''">
+                            <a th:href="@{/managers}">Менеджеры</a>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('CLIENT','MANAGER')" th:class="${page eq 'orders/inprocess'}? 'active' : ''">
+                            <a th:href="@{/orders/inprocess}">Мои заказы</a>
+                        </li>
+
+                        <li sec:authorize="hasAnyAuthority('ADMIN','CLIENT','MANAGER')" th:class="${page eq 'tickets'}? 'active' : ''">
+                            <a th:href="@{/tickets}">Техподдержка</a>
+                        </li>
+                    </ul>
+
+                    <div th:if="${#httpServletRequest.remoteUser ne null}" class="pull-right">
+                        <div style="float:left">
+                            <span th:inline="text" class="brand" style="color: #fff;font-weight: bold">[[${#httpServletRequest.remoteUser}]]</span>
+                        </div>
+                        <div style="float: left">
+                            <form th:action="@{/logout}" class="navbar-form" method="post">
+                                <input type="submit" name="signout" value="Sign Out"/>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                    </div>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

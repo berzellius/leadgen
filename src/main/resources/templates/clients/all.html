@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head(title='Клиенты')"/>
+<body>
+<div th:replace="fragment/header :: header(page='clients')">...</div>
+<div class="container">
+    <h1>Клиенты</h1>
+
+    <p>Клиенты</p>
+    <p><a class="btn btn-primary btn-large" th:href="@{/clients/new}">Новый клиент</a></p>
+
+
+    <div th:if="${clients != null}">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Остаток на счету</th>
+            </tr>
+            </thead>
+            <tbody class="rowlink">
+            <tr th:each="client : ${clients}">
+                <td><a th:href="@{/clients/} + ${client.id}" th:text="${client.id}"></a></td>
+                <!--td th:text="${client.id}"/-->
+                <td th:text="${client.name}"/>
+                <td th:text="${client.description}"/>
+                <td th:text="${client.money}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

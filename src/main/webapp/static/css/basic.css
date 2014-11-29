@@ -1,0 +1,36 @@
+
+tbody.rowlink tr{
+    cursor: pointer;
+}
+
+div.filters_block div.field{
+    float: left;
+    margin: 5px;
+}
+
+div.clearboth{
+    clear: both;
+}
+
+div.hero-unit.filters_block{
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+div.hero-unit.comment{
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 55%;
+}
+
+div.hero-unit.comment.answer{
+    margin-left: auto;
+    margin-right: 0;
+    background-color: #eeeebb;
+}
+
+div.comment > p.sign{
+    font-size: .5em;
+    line-height: .7em;
+}
+

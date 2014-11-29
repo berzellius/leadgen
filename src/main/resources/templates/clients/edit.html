@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head(title='Клиент')"/>
+<body>
+<div th:replace="fragment/header :: header(page='clients')">...</div>
+<div class="container">
+    <h1>Клиент <span th:inline="text">[[${client.name}]]</span></h1>
+
+    <div style="width:40%; float: left">
+        <form class="form-signin" method="post" th:action="@{/clients/}+${client.id}">
+            <h2 class="form-signin-heading">Редактировать</h2>
+
+            <div th:if="${reason ne null}" th:switch="${reason}">
+                <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).NAME_FIELD}" style="color: red">
+                    Заполните поле Название!
+                </p>
+            </div>
+            <input type="hidden" name="id" th:value="${client.id}"/>
+            <input type="text" class="input-block-level" placeholder="Название" name="name"
+                   th:value="${(client ne null)? client.name : ''}"/>
+            <label for="description">Описание</label>
+            <textarea name="description" th:inline="text">[[${(client ne null)? client.description : ''}]]</textarea>
+            <br/>
+            <button class="btn btn-large btn-primary" type="submit">Обновить</button>
+        </form>
+    </div>
+
+    <div style="width: 40%; float: right;">
+        <h2>Параметры</h2>
+        <table class="table">
+            <tr>
+                <td>Состояние счета</td>
+                <td th:inline="text"><b>[[${client.money}]]</b></td>
+                <td>
+                    <form>
+                        <button class="btn btn-large btn-primary" type="submit">Пополнить</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${adminUser ne null}">
+                <td>Учетная запись</td>
+                <td><b th:inline="text">[[${adminUser.username}]]</b></td>
+                <td>
+                    <form th:action="@{/users/edit/} + ${adminUser.id}">
+                        <button class="btn btn-large btn-primary" type="submit">Редактировать</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${adminUser eq null}">
+                <td>Учетная запись</td>
+                <td><b style="color:red">Не создана</b></td>
+                <td>
+                    <form th:action="@{/users/new}" >
+                        <input type="hidden" name="client" th:value="${client.id}" />
+                        <input type="hidden" name="role" value="CLIENT" />
+                        <button class="btn btn-large btn-primary" type="submit">Создать</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="clear: both" />
+
+    <h2>Источники заказов</h2>
+
+    <div th:if="${sources_available != null}">
+        <h3>Добавить источник</h3>
+        <form method="post" th:action="@{/clients/} + ${client.id} + '?add_source'">
+            <select name="source_id">
+                <option th:each="src : ${sources_available}" th:value="${src.id}" th:text="${src.name} + ' - ' + ${src.url}" />
+            </select>
+            <button class="btn btn-large btn-primary" type="submit">Добавить</button>
+        </form>
+    </div>
+
+    <div th:if="${client.sourceList != null}">
+        <table class="table">
+            <tr th:each="src : ${client.sourceList}">
+                <td th:text="${src.name}" />
+                <td th:text="${src.description}" />
+                <td><a th:text="${src.url}" th:href="${src.url}" /></td>
+                <td>
+                    <form method="post" th:action="@{/clients/} + ${client.id} + '?del_source'">
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <input type="hidden" name="source_id" th:value="${src.id}" />
+                        <input type="image" th:src="@{/static/ico/delete.png}" />
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+        >
+<head th:replace="template :: head(title='Техподдержка')"/>
+<body>
+<div th:replace="fragment/header :: header(page='tickets')">...</div>
+<div class="container">
+    <h1>Обращения в техподдержку</h1>
+
+    <p>
+        <a th:if="${archive == null}" href="?archive=yes">Посмотреть архив</a>
+        <a th:if="${archive}" href="?">Назад к актуальным обращениям</a>
+    </p>
+
+    <div th:if="${tickets != null}">
+
+        <div sec:authorize="hasAnyAuthority('CLIENT', 'MANAGER')">
+            <a class="btn btn-primary btn-large" th:href="@{/tickets/new}">Обратиться в техподдержку »</a>
+        </div>
+
+        <div th:replace="fragment/pagination :: paginationbar">PAGINATION</div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Кратко</th>
+                <th th:text="#{ticket.status}">Status</th>
+                <th sec:authorize="hasAnyAuthority('ADMIN')">Клиент</th>
+                <th sec:authorize="hasAnyAuthority('ADMIN','CLIENT')">Подал</th>
+                <th>Create</th>
+            </tr>
+            </thead>
+            <tbody class="rowlink">
+            <tr th:each="ticket : ${tickets}"
+                    th:class="${
+                        (ticket.status == T(com.leadgen.enumerated.TicketStatus).NEW)? 'error' :
+                            (ticket.status == T(com.leadgen.enumerated.TicketStatus).WAIT)? 'warning' :
+                                (ticket.status == T(com.leadgen.enumerated.TicketStatus).DONE)? 'success' : ''
+                    }">
+                <td><a th:text="${ticket.id}" th:href="@{/tickets/}+${ticket.id}" /></td>
+                <td th:text="${ticket.name}" />
+                <td th:text="#{${'ticket.status.' + ticket.status}}"/>
+                <td sec:authorize="hasAnyAuthority('ADMIN')" th:text="${ticket.client}"/>
+                <td sec:authorize="hasAnyAuthority('ADMIN','CLIENT')" th:text="${ticket.owner.username}" />
+                <td th:text="${ticket.dtmCreate}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+</body>
+</html>

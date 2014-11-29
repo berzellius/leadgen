@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head(title='Менеджеры')"/>
+<body>
+<div th:replace="fragment/header :: header(page='managers')">...</div>
+<div class="container">
+    <h1>Менеджеры</h1>
+
+    <p>Менеджеры</p>
+    <p>
+    <form th:action="@{/users/new}" >
+        <input type="hidden" name="client" th:value="${client.id}" />
+        <input type="hidden" name="role" value="MANAGER" />
+        <button class="btn btn-large btn-primary" type="submit">Новый менеджер</button>
+    </form>
+    </p>
+
+
+    <div th:if="${managerUsers != null}">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Логин</th>
+            </tr>
+            </thead>
+            <tbody class="rowlink">
+            <tr th:each="manager : ${managerUsers}">
+                <td><a th:href="@{/users/edit/} + ${manager.id}" th:text="${manager.id}"></a></td>
+                <td th:text="${manager.username}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+        >
+<head th:replace="template :: head(title='Заказы в обработке')"/>
+<body>
+<div th:replace="fragment/header :: header(page='orders/inprocess')">...</div>
+<div class="container">
+    <h1>Заказы</h1>
+
+    <p>Заказы в обработке</p>
+
+    <div th:if="${orders != null}">
+
+        <div class="filters_block hero-unit">
+            <form id="filters" th:action="@{/orders/inprocess}">
+                <div class="field">
+                    <label for="statusList">Статус</label>
+                    <select name="statusList" multiple="multiple">
+                        <option
+                                th:each="st : ${T(com.leadgen.enumerated.Status).values()}"
+                                th:value="${st}"
+                                th:text="#{${'order.status.' + st}}"
+                                th:selected="${
+                                (orderFilter.statusList != null)? #lists.contains(orderFilter.statusList, st) : st.isUserDefined()}"
+                                />
+                    </select>
+
+                </div>
+
+                <!--div class="field" sec:authorize="hasAnyAuthority('ADMIN')">
+                    <label for="client">Клиент</label>
+                    <input type="text" name="client"/>
+                </div-->
+
+                <div class="clearboth">
+                    <button class="btn btn-large btn-primary" type="submit">Поиск</button>
+                </div>
+
+            </form>
+            <div></div>
+        </div>
+
+        <div th:replace="fragment/pagination :: paginationbar">PAGINATION</div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Info</th>
+                <th>Status</th>
+                <th>Create</th>
+            </tr>
+            </thead>
+            <tbody class="rowlink">
+            <tr th:each="order : ${orders}">
+                <td>
+                    <a th:href="@{/orders/} + ${order.id}" th:text="${order.id}" />
+                </td>
+                <td>
+                    <p th:if="${order.infoJson == null}" th:text="${order.info}"/>
+                    <div th:if="${order.infoJson != null}">
+                        <p th:if="${order.infoJson[k] != null}" th:each="k : ${order.infoJson.keys()}">
+                            <b th:text="${k}" />:&nbsp;<span
+                                th:text="${order.infoJson[k]}"
+                                />
+                        </p>
+                    </div>
+                </td>
+
+                <td th:text="#{${'order.status.' + order.status}}"/>
+
+                <td th:text="${order.dtmCreate}"/>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+</body>
+</html>

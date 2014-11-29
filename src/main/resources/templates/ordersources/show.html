@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head(title='Источник заказов ' + orderSource.name)"/>
+<body>
+<div th:replace="fragment/header :: header(page='order_sources')">...</div>
+<div class="container">
+    <h1>Источник заказов <span th:inline="text">[[${orderSource.name}]]</span></h1>
+
+
+    <div th:if="${orderSourceReason ne null}" th:switch="${orderSourceReason}">
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).NAME_FIELD}" style="color: red">
+            Заполните поле Название!
+        </p>
+
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).URL_FIELD}" style="color: red">
+            Заполните поле URL!
+        </p>
+
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).COST_FIELD}" style="color: red">
+            Стоимость привлечения заказа должна быть больше 0!
+        </p>
+
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).PRICE_FIELD}" style="color: red">
+            Стоимость выкупа заказа должна быть больше 0!
+        </p>
+    </div>
+
+    <div class="row">
+        <form class="form-signin" method="post" th:action="@{/order_src/}+${orderSource.id}">
+            <div class="span6">
+                <fieldset>
+                    <label for="name">Название</label>
+                    <input type="text" name="name" th:value="${(orderSource ne null)? orderSource.name : ''}"/>
+                    <label for="description">Описание</label>
+                    <textarea name="description"
+                              th:text="${(orderSource ne null)? orderSource.description : ''}"></textarea>
+                </fieldset>
+                <button class="btn btn-large btn-primary" type="submit">Обновить</button>
+            </div>
+            <div class="span6">
+                <fieldset>
+                    <label for="url">URL</label>
+                    <input type="text" name="url" th:value="${(orderSource ne null)? orderSource.url : ''}"/>
+                    <label for="cost">Стоимость привлечения заказа</label>
+                    <input type="text" name="cost" data-validation="number" data-validation-error-msg="Введите число"
+                           th:value="${(orderSource ne null)? orderSource.cost : ''}"/>
+                    <label for="price">Стоимость выкупа заказа</label>
+                    <input type="text" name="price" data-validation="number" data-validation-error-msg="Введите число"
+                           th:value="${(orderSource ne null)? orderSource.price : ''}"
+                            />
+                </fieldset>
+            </div>
+        </form>
+    </div>
+
+    <h2>Показатели качества</h2>
+
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Средняя стоимость выполненного заказа</th>
+                <th>Конверсия в выполненный заказ</th>
+                <th>Конверсия выкупленного заказа в выполненный</th>
+                <th>Рентабельность</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${orderSource.doneOrderCost}"/>
+                <td th:text="${orderSource.conversionInDone}"/>
+                <td th:text="${orderSource.conversionHasClientInDone}"/>
+                <td th:text="${orderSource.profitability}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <h2>Параметры для различных UTM</h2>
+
+    <div th:if="${utmPricesReason ne null}" th:switch="${utmPricesReason}">
+
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).COST_FIELD}" style="color: red">
+            Стоимость привлечения заказа должна быть больше 0!
+        </p>
+
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).PRICE_FIELD}" style="color: red">
+            Стоимость выкупа заказа должна быть больше 0!
+        </p>
+
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).UNIQUE}" style="color: red">
+            Параметры для utm источника уже заданы!
+        </p>
+    </div>
+
+    <form method="post" action="?add_price">
+        <div class="row">
+            <div class="span4">
+                <div class="field">
+                    <label for="sourceUTM">UTM:</label>
+                    <select name="sourceUTM">
+                        <option th:each="utm : ${utmpossible}" th:text="${utm.name}" th:value="${utm.id}"/>
+                    </select>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="field">
+                    <label for="cost">Стоимость привлечения заказа:</label>
+                    <input type="text" name="cost" data-validation="number" data-validation-error-msg="Введите число"/>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="field">
+                    <label for="price">Стоимость выкупа заказа:</label>
+                    <input type="text" name="price" data-validation="number" data-validation-error-msg="Введите число"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <button class="btn btn-large btn-primary" type="submit">Добавить</button>
+            </div>
+        </div>
+    </form>
+
+
+    <div th:if="${prices != null}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Стоимость привлечения заказа</th>
+                <th>Стоимость выкупа заказа</th>
+                <th>Средняя стоимость выполненного заказа</th>
+                <th>Конверсия в выполненный заказ</th>
+                <th>Конверсия выкупленного заказа в выполненный</th>
+                <th>Рентабельность</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="price : ${prices}">
+                <td th:text="${price.sourceUTM.name}"/>
+                <td th:text="${price.cost}"/>
+                <td th:text="${price.price}"/>
+                <td th:text="${price.doneOrderCost}"/>
+                <td th:text="${price.conversionInDone}"/>
+                <td th:text="${price.conversionHasClientInDone}"/>
+                <td th:text="${price.profitability}"/>
+                <td>
+                    <form method="post"
+                          th:action="@{/order_src/} + ${orderSource.id} + '/price/' + ${price.id} + '?delete'">
+                        <input type="hidden" name="_method" value="DELETE"/>
+                        <input type="image" th:src="@{/static/ico/delete.png}"/>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="template :: head(title='Главная')" />
+    <body>
+        <div th:replace="fragment/header :: header(page='index')">...</div>
+        <div class="container">
+            <h1></h1>
+            <p></p>
+            <div class="hero-unit">
+                <h1>Главная страница</h1>
+                <p th:text="#{message.hello}" />
+                <p><a class="btn btn-primary btn-large" th:href="@{/orders}">К заказам »</a></p>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head(title='Новый тикет')"/>
+<body>
+<div th:replace="fragment/header :: header(page='tickets')">...</div>
+<div class="container">
+    <div style="">
+        <form class="form-signin" method="post" enctype="multipart/form-data" role="form">
+            <h2 class="form-signin-heading">Новый тикет</h2>
+            <div th:if="${reason ne null}" th:switch="${reason}">
+                <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).NAME_FIELD}" style="color: red">
+                    Заполните поле Название!
+                </p>
+
+                <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).DESCRIPTION_FIELD}" style="color: red">
+                    Заполните Описание!
+                </p>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="input-block-level" placeholder="Краткое описание" name="name" th:value="${(ticket ne null)? ticket.name : ''}" />
+            </div>
+
+            <div class="form-group">
+                <label for="description">Описание проблемы</label>
+                <textarea name="description" id="description" th:inline="text">[[${(ticket ne null)? ticket.description : ''}]]</textarea>
+            </div>
+
+            <div class="form-group">
+                <button id="btn_add_file" class="btn btn-sm btn-primary">Прикрепить файл</button>
+                <p>&nbsp;</p>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-large btn-primary" type="submit">Обратиться</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

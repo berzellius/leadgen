@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head(title='Метки UTM')"/>
+<body>
+<div th:replace="fragment/header :: header(page='sources_utm')">...</div>
+<div class="container">
+    <h1>UTM  метки</h1>
+
+    <p>Метки</p>
+    <div th:if="${reason ne null}" th:switch="${reason}">
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).NAME_FIELD}" style="color: red">
+            Заполните поле Название!
+        </p>
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).CODE_FIELD}" style="color: red">
+            Заполните поле Код!
+        </p>
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).UNIQUE}" style="color: red">
+            Имя и код должны быть уникальными!
+        </p>
+    </div>
+
+    <form th:action="@{/utm}" method="post" class="form-inline">
+        <label for="name">Название</label>
+        <input type="text" name="name" />
+        <label for="code">Код</label>
+        <input type="text" name="code" />
+        <button class="btn btn-large btn-primary" type="submit">Добавить метку</button>
+    </form>
+
+
+
+    <div th:if="${utmlist != null}">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Название</th>
+                <th>Код</th>
+                <th />
+                <th />
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="utm : ${utmlist}">
+                <td th:text="${utm.id}" />
+                <td th:text="${utm.name}"/>
+                <td th:text="${utm.code}"/>
+                <td th:text="${'www.example.com?source='+utm.code}" />
+                <td>
+                    <form method="post" th:action="@{/utm/} + ${utm.id} + '?delete'">
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <input type="image" th:src="@{/static/ico/delete.png}" />
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

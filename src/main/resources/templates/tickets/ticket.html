@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+        >
+<head th:replace="template :: head(title='Техподдержка : ${ticket.name}')"/>
+<body>
+<div th:replace="fragment/header :: header(page='tickets')">...</div>
+<div class="container">
+    <h1>Обращение:  <span th:text="${ticket.name}" /></h1>
+
+    <p>
+        <b>Статус обращения:</b>&nbsp;
+        <span th:text="#{${'ticket.status.' + ticket.status}}" />
+    </p>
+
+    <div class="" style="float:right">
+        <p sec:authorize="hasAnyAuthority('CLIENT', 'MANAGER')" th:if="${ticket.status != T(com.leadgen.enumerated.TicketStatus).CLOSED}">
+            <a class="btn btn-primary btn-large" href="?close">Моя проблема решена »</a>
+        </p>
+        <p sec:authorize="hasAnyAuthority('ADMIN')">
+            <a class="btn btn-primary btn-large" href="?done">Проблема клиента решена »</a>
+        </p>
+    </div>
+
+    <div class="hero-unit comment">
+        <p th:text="${ticket.description}" />
+        <p class="sign">
+            <span th:text="${ticket.owner}" />, <span th:text="${#calendars.format(ticket.dtmCreate,'dd MMMM yyyy')}" />
+        </p>
+        <div class="files">
+            <p th:each="attach : ${ticket.attachments}">
+                <span th:text="${attach.name}" />&nbsp;
+                <a th:href="@{'/uploads/download/'} + ${attach.id} + '.' + ${attach.extension}" th:text="Скачать" />
+            </p>
+        </div>
+    </div>
+
+    <div style="width: 50%">
+        <form class="form-signin" method="post" action="?add_comment" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <textarea placeholder="Напишите комментарий" name="text"></textarea>
+            </div>
+
+            <div class="form-group">
+                <button id="btn_add_file" class="btn btn-sm btn-primary">Прикрепить файл</button>
+                <p>&nbsp;</p>
+            </div>
+
+            <button class="btn btn-large btn-primary" type="submit">Оставить комментарий</button>
+        </form>
+    </div>
+
+    <div th:replace="fragment/pagination :: paginationbar">PAGINATION</div>
+
+    <div th:each="comment : ${comments}" th:class="${('hero-unit comment') + ((comment.user == currentUser)? '' : ' answer')}">
+        <p th:text="${comment.text}" />
+        <p class="sign">
+            <span th:text="${comment.user}" />, <span th:text="${#calendars.format(comment.dtmCreate,'dd MMMM yyyy HH:mm')}" />
+        </p>
+        <div class="files">
+            <p th:each="attach : ${comment.attachments}">
+                <span th:text="${attach.name}" />&nbsp;
+                <a th:href="@{'/uploads/download/'} + ${attach.id} + '.' + ${attach.extension}" th:text="Скачать" />
+            </p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

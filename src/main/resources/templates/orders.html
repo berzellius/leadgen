@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+        >
+<head th:replace="template :: head(title='Заказы')"/>
+<body>
+<div th:replace="fragment/header :: header(page='orders')">...</div>
+<div class="container">
+    <h1>Заказы</h1>
+
+    <p>Заказы, поступившие в систему..</p>
+
+    <div th:if="${orders != null}">
+
+        <div class="filters_block hero-unit">
+            <form id="filters" th:action="@{/orders/}">
+                <div class="field" sec:authorize="hasAnyAuthority('ADMIN')">
+                    <label for="statusList">Статус</label>
+                    <select name="statusList" multiple="multiple">
+                        <option
+                                th:each="st : ${T(com.leadgen.enumerated.Status).values()}"
+                                th:value="${st}"
+                                th:text="#{${'order.status.' + st}}"
+                                th:selected="${(orderFilter.statusList != null)? #lists.contains(orderFilter.statusList, st) : false}"
+                                />
+                    </select>
+
+                </div>
+
+                <!--div class="field" sec:authorize="hasAnyAuthority('ADMIN')">
+                    <label for="client">Клиент</label>
+                    <input type="text" name="client"/>
+                </div-->
+
+                <div class="clearboth">
+                    <button class="btn btn-large btn-primary" type="submit">Поиск</button>
+                </div>
+
+            </form>
+            <div></div>
+        </div>
+
+
+        <div th:replace="fragment/pagination :: paginationbar">PAGINATION</div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Info</th>
+                <th sec:authorize="hasAnyAuthority('ADMIN')">Источник</th>
+                <th sec:authorize="hasAnyAuthority('ADMIN')" th:text="#{order.status}">Status</th>
+                <th sec:authorize="hasAnyAuthority('ADMIN')">Клиент</th>
+                <th sec:authorize="hasAnyAuthority('ADMIN')">Стоимость привлечения заказа</th>
+                <th>Стоимость заказа</th>
+                <th>Create</th>
+                <th sec:autorize="hasAnyAuthority('MANAGER')"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}"/>
+                <td>
+                    <p th:if="${order.infoJson == null}" th:text="${order.info}"/>
+                    <div th:if="${order.infoJson != null}">
+                        <p sec:authorize="hasAnyAuthority('MANAGER', 'CLIENT')" th:if="${order.infoJson[k] != null}" th:each="k : ${order.infoJson.keys()}">
+                            <b th:text="${k}" />:&nbsp;
+                            <span th:if="${#lists.contains(order.infoJson.restrictedKeys(),k)}" th:text="('****')" />
+                            <span th:if="${!#lists.contains(order.infoJson.restrictedKeys(),k)}" th:text="${order.infoJson[k]}" />
+                        </p>
+                        <p sec:authorize="hasAnyAuthority('ADMIN')" th:if="${order.infoJson[k] != null}" th:each="k : ${order.infoJson.keys()}">
+                            <b th:text="${k}" />:&nbsp;<span
+                                th:text="${order.infoJson[k]}"
+                                />
+                        </p>
+                    </div>
+                </td>
+                <td sec:authorize="hasAnyAuthority('ADMIN')">
+                    <span th:text="${order.sourceUTM}"></span>
+
+                    <div th:if="${order.orderSource != null}">
+                        <p><a th:text="${order.orderSource.url}" th:href="${order.orderSource.url}"/></p>
+                    </div>
+                </td>
+                <td sec:authorize="hasAnyAuthority('ADMIN')" th:text="#{${'order.status.' + order.status}}"/>
+                <td sec:authorize="hasAnyAuthority('ADMIN')" th:text="${order.client}"/>
+                <td sec:authorize="hasAnyAuthority('ADMIN')" th:text="${order.cost}" />
+                <td th:text="${order.price}" />
+                <td th:text="${order.dtmCreate}"/>
+                <td sec:authorize="hasAnyAuthority('MANAGER', 'CLIENT')">
+                    <form th:action="@{/orders/take}" method="post">
+                        <input type="hidden" name="order_id" th:value="${order.id}"/>
+                        <button class="btn btn-large btn-primary" type="submit">Взять заказ</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+</body>
+</html>

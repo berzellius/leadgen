@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <title th:text="'Лидогенерация: ' + ${title}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link type="text/css" rel="stylesheet" media="screen" th:href="@{/static/css/basic.css}" />
+    <link type="text/css" rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap.css}" />
+    <link type="text/css" rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap-responsive.css}" />
+
+    <style>
+        body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+    </style>
+
+
+    <script type="text/javascript" th:src="@{/static/js/jquery.js}" />
+    <script type="text/javascript" th:src="@{/static/js/bootstrap.min.js}" />
+    <script type="text/javascript" th:src="@{/static/js/jquery.form-validator.min.js}" />
+    <script type="text/javascript" th:src="@{/static/js/jasny-bootstrap.min.js}" />
+    <script type="text/javascript" th:src="@{/static/js/leadgen.js}" />
+
+    <script>
+        jQuery(document).ready(function($){
+            $('tbody.rowlink').rowlink();
+
+            $.validate();
+        });
+    </script>
+</head>
+<body>
+<div th:replace="fragment/header :: header(page='greeting')">...</div>
+<div class="container">
+<p th:text="'Привет, ' + ${name} + '!'" />
+
+</div>
+</body>
+</html>

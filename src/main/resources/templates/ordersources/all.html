@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head(title='Источники заказов')"/>
+<body>
+<div th:replace="fragment/header :: header(page='order_sources')">...</div>
+<div class="container">
+    <h1>Источники заказов</h1>
+
+    <p>Источники</p>
+
+    <div th:if="${reason ne null}" th:switch="${reason}">
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).NAME_FIELD}" style="color: red">
+            Заполните поле Название!
+        </p>
+
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).URL_FIELD}" style="color: red">
+            Заполните поле URL!
+        </p>
+
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).COST_FIELD}" style="color: red">
+            Стоимость привлечения заказа должна быть больше 0!
+        </p>
+
+        <p th:case="${T(com.leadgen.exceptions.WrongInputDataException.Reason).PRICE_FIELD}" style="color: red">
+            Стоимость выкупа заказа должна быть больше 0!
+        </p>
+    </div>
+
+    <div class="row">
+        <form th:action="@{/order_src/new}" method="post">
+            <div class="span6">
+                <fieldset>
+                    <label for="name">Название</label>
+                    <input type="text" name="name"/>
+                    <label for="description">Описание</label>
+                    <textarea name="description"></textarea>
+                </fieldset>
+                <button class="btn btn-large btn-primary" type="submit">Новый источник</button>
+            </div>
+            <div class="span6">
+                <fieldset>
+                    <label for="url">URL</label>
+                    <input type="text" name="url"/>
+                    <label for="cost">Стоимость привлечения заказа</label>
+                    <input type="text" name="cost" data-validation="number" data-validation-error-msg="Введите число" />
+                    <label for="price">Стоимость выкупа заказа</label>
+                    <input type="text" name="price" data-validation="number" data-validation-error-msg="Введите число" />
+                </fieldset>
+            </div>
+        </form>
+    </div>
+
+
+    <div th:if="${sources != null}">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>URL</th>
+                <th>Стоимость привлечения заказа</th>
+                <th>Стоимость выкупа заказа</th>
+                <th>Ключ аутентификации</th>
+                <th>Средняя стоимость выполненного заказа</th>
+                <th>Конверсия в выполненный заказ</th>
+                <th>Конверсия выкупленного заказа в выполненный</th>
+                <th>Рентабельность</th>
+            </tr>
+            </thead>
+            <tbody class="rowlink">
+            <tr th:each="src : ${sources}">
+                <td><a th:href="@{/order_src/} + ${src.id}" th:text="${src.id}" /></td>
+                <td th:text="${src.name}"/>
+                <td th:text="${src.description}"/>
+                <td th:text="${src.url}"/>
+                <td th:text="${src.cost}"/>
+                <td th:text="${src.price}"/>
+                <td th:text="${src.authKey}"/>
+                <td th:text="${src.doneOrderCost}"/>
+                <td th:text="${src.conversionInDone}"/>
+                <td th:text="${src.conversionHasClientInDone}"/>
+                <td th:text="${src.profitability}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
