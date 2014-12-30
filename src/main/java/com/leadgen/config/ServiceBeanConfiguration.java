@@ -112,4 +112,5 @@ public class ServiceBeanConfiguration {
     public UTMService utmService(){
         return new UTMServiceImpl();
     }
+
 }

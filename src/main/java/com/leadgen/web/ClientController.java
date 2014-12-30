@@ -1,9 +1,9 @@
 package com.leadgen.web;
 
 import com.leadgen.dmodel.Client;
-import com.leadgen.exceptions.WrongInputDataException;
 import com.leadgen.dmodel.OrderSource;
 import com.leadgen.dmodel.User;
+import com.leadgen.exceptions.WrongInputDataException;
 import com.leadgen.repository.ClientRepository;
 import com.leadgen.repository.OrderSourceRepository;
 import com.leadgen.service.ClientService;
@@ -34,12 +34,14 @@ public class ClientController {
     @Autowired
     OrderSourceRepository orderSourceRepository;
 
+
+
     @RequestMapping(method = RequestMethod.GET)
     public String clients(Model model){
 
         List<Client> clients = (List<Client>) clientRepository.findAll();
         model.addAttribute("clients", clients);
-
+        model.addAttribute("hello", "null");
 
         return "clients/all";
     }
