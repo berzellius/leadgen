@@ -1,7 +1,7 @@
 package com.leadgen.config;
 
-import com.leadgen.interceptors.AddTemplatesDataInterceptor;
 import com.leadgen.enumerated.Source;
+import com.leadgen.interceptors.AddTemplatesDataInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -38,7 +38,7 @@ public class ConfigMVCConfigurerAdapter extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/webapp/static/**").addResourceLocations("/static/");
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/WEB-INF/static/");
     }
 
     @Override

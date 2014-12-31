@@ -2,22 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 
-
-
+    <artifactId>leadgen-main</artifactId>
     <groupId>com.leadgen</groupId>
-    <artifactId>leadgen</artifactId>
-    <packaging>pom</packaging>
     <version>0.4.0</version>
-    <modules>
-        <module>leadgen-main</module>
-        <module>leadgen-billing</module>
-    </modules>
+    <name>Основной сервер leadgen</name>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>war</packaging>
 
 
-    <dependencyManagement>
+
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-dependencies</artifactId>
@@ -142,14 +138,20 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
-    </dependencies>
-    </dependencyManagement>
 
-    <properties>
-        <start-class>com.leadgen.Application</start-class>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+        <!-- Leadgen -->
+        <dependency>
+            <groupId>com.leadgen</groupId>
+            <artifactId>leadgen-billing</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+
+
+    </dependencies>
+
+
+
+
 
     <build>
         <plugins>
@@ -167,6 +169,12 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
             </plugin>
         </plugins>
     </build>

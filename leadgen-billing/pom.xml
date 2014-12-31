@@ -4,19 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.leadgen</groupId>
+        <artifactId>leadgen</artifactId>
+        <version>0.4.0</version>
+    </parent>
 
-
-    <groupId>com.leadgen</groupId>
-    <artifactId>leadgen</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>leadgen-billing</artifactId>
     <version>0.4.0</version>
-    <modules>
-        <module>leadgen-main</module>
-        <module>leadgen-billing</module>
-    </modules>
+    <name>Биллинг leadgen</name>
 
-
-    <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -143,33 +140,8 @@
             <version>4.12</version>
         </dependency>
     </dependencies>
-    </dependencyManagement>
 
-    <properties>
-        <start-class>com.leadgen.Application</start-class>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>1.1.8.RELEASE</version>
-                <configuration>
-                    <mainClass>com.leadgen.Application</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
     <repositories>
         <repository>
@@ -183,13 +155,5 @@
     </repositories>
 
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestone</id>
-            <url>http://repo.spring.io/libs-release</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-
-
+    
 </project>

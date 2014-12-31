@@ -1,9 +1,9 @@
 package com.leadgen.web;
 
 import com.leadgen.dmodel.UserRole;
-import com.leadgen.util.UserLoginUtil;
 import com.leadgen.dmodel.User;
 import com.leadgen.repository.UserRepository;
+import com.leadgen.util.UserLoginUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

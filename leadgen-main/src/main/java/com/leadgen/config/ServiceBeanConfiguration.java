@@ -1,5 +1,7 @@
 package com.leadgen.config;
 
+import com.leadgen.billing.BillingMainContract;
+import com.leadgen.billing.BillingMainContractImpl;
 import com.leadgen.interceptors.AddTemplatesDataInterceptor;
 import com.leadgen.service.*;
 import com.leadgen.settings.LocalProjectSettings;
@@ -111,6 +113,11 @@ public class ServiceBeanConfiguration {
     @Bean
     public UTMService utmService(){
         return new UTMServiceImpl();
+    }
+
+    @Bean
+    public BillingMainContract billingMainContract(){
+        return new BillingMainContractImpl();
     }
 
 }

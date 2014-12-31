@@ -35,13 +35,11 @@ public class ClientController {
     OrderSourceRepository orderSourceRepository;
 
 
-
     @RequestMapping(method = RequestMethod.GET)
     public String clients(Model model){
 
         List<Client> clients = (List<Client>) clientRepository.findAll();
         model.addAttribute("clients", clients);
-        model.addAttribute("hello", "null");
 
         return "clients/all";
     }
@@ -72,7 +70,7 @@ public class ClientController {
         } catch (WrongInputDataException e) {
             //model.addAttribute("reason", e.getReason());
             //model.addAttribute("client", client);
-            redirectAttributes.addFlashAttribute("client" ,client);
+            redirectAttributes.addFlashAttribute("client", client);
             redirectAttributes.addAttribute("reason", e.getReason());
 
             return "redirect:/clients/new";
